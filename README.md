@@ -5,6 +5,7 @@ Automatically detect and remove unused icons from React projects, reducing bundl
 * Installation Node >=18 is required for installation.
 
 global install
+
 `Yarn`
 ```bash
 yarn global add react-unused-icon-purge
@@ -16,6 +17,7 @@ npm install -g react-unused-icon-purge
 ```
 
 package install
+
 `Yarn`
 ```bash
 yarn add react-unused-icon-purge --dev
@@ -46,7 +48,8 @@ npm install react-unused-icon-purge --save-dev
 }
 ```
 
-3. Execute Command
+3. Execute Command 
+
 Run in project root:
 ```bash
 npm run react-unused-icon-purge
@@ -57,11 +60,14 @@ react-unused-icon-purge
 ```
 
 This will generate a *-min folder next to your original TTF file containing:
-    * Optimized CSS file with only used icons
-    * Minified TTF font file
-4. Verify & Replace Files
-    Replace global CSS reference:
-    ```javascript
+ * Optimized CSS file with only used icons
+ * Minified TTF font file 
+
+4. Verify & Replace Files 
+
+    Replace global CSS reference: 
+    
+     ```javascript
     // Before
     import './statics/css/iconfont.css'; 
     // After
@@ -78,4 +84,4 @@ This will generate a *-min folder next to your original TTF file containing:
 | `excludeClasses`| string[]            | `[]`       |  Icon class names to exclude (dynamic icon classes not covered by static analysis)    |
 
 ## 🐛 Issue Reporting
-Found a bug? Have a suggestion? Please [open an issue](https://github.com/yourusername/react-unused-icon-purge/issues)  
+Found a bug? Have a suggestion? Please [open an issue](https://github.com/yin1039832061/react-unused-icon-purge/issues)  
