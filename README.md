@@ -36,7 +36,7 @@ npm install react-unused-icon-purge --save-dev
     "fontTTFPath":"./src/statics/css/iconfont.ttf",// iconfont.ttf path
     "iconPrefix":"iconfont",// iconfont prefix
     "excludeClasses":["icon-xxx"],//  Icon class names to exclude (dynamic icon classes not covered by static analysis)
-    "entry":["/app"]// entry file path
+    "entry":["/src"]// entry file path
 }
 ```
 
