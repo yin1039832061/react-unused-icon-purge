@@ -12,7 +12,7 @@ const {
     readDir
 } = require('./utils/index');
 
-const configFile = 'react-unused-icon-purge.json';
+const configFile = 'react-unused-icon-purge.config.json';
 
 let config = {};
 

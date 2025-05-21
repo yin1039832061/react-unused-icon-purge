@@ -12,9 +12,16 @@
     "postcss-selector-parser": "^7.1.0"
   },
   "bin": {
-    "react-unused-icon-purge": "./bin/cli.js"
+    "react-unused-icon-purge": "bin/cli.js"
   },
   "engines": {
     "node": ">=18.16.0"
-  }
+  },
+  "description": "Automatically detect and remove unused icons from React projects, reducing bundle size. 🔍🗑️",
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "dl.yin"
 }
