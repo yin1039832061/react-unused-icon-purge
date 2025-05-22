@@ -100,6 +100,23 @@ async function init() {
                                     templateClasses.forEach(cls => {
                                         classNameList.add(cls);
                                     });
+                                } else if (arg.type === "ArrayExpression") {
+                                    arg.elements.forEach(el => {
+                                        if (el.type === "StringLiteral") {
+                                            el.value.split(' ').forEach(cls => cls && classNameList.add(cls))
+                                        } else if (el.type === "TemplateLiteral") {
+                                            const templateClasses = getTemplateLiteralClassName(el);
+                                            templateClasses.forEach(cls => {
+                                                classNameList.add(cls);
+                                            });
+                                        } else if (el.type === "ObjectExpression") {
+                                            el.properties.forEach(prop => {
+                                                if (prop?.key?.type === "StringLiteral") {
+                                                    prop.key.value?.split(' ').forEach(c => c && classNameList.add(c))
+                                                }
+                                            })
+                                        }
+                                    })
                                 }
                             }
                         }
