@@ -83,5 +83,18 @@ This will generate a *-min folder next to your original TTF file containing:
 | `iconPrefix`  | string             | **Required**        | iconfont prefix            |
 | `excludeClasses`| string[]            | `[]`       |  Icon class names to exclude (dynamic icon classes not covered by static analysis)    |
 
+## 🖥️ Supported Syntax 
+This tool can detect these icon class patterns: 
+| Pattern                  | Example                                      | Detected Classes       |
+|--------------------------|----------------------------------------------|------------------------|
+| Static class             | `<i className="icon-a icon-b"/>`             | `icon-a`, `icon-b`     |
+| Template literals        | `` className={`icon-base ${var}`} ``        | `icon-base`            |
+| Ternary expressions      | `` className={`icon-${cond ? 'a' : 'b'}`} ``| `icon-a`, `icon-b`     |
+| classnames() calls       | `classnames('icon-a', { 'icon-b': flag })`   | `icon-a`, `icon-b`     |
+| Array syntax             | `classnames(['icon-a', 'icon-b'])`           | `icon-a`, `icon-b`     | 
+### ❗ Limitations 
+- Dynamic concatenation like `` icon-${variable} `` won't be detected
+- Only analyzes _static_ string literals and ternary patterns
+
 ## 🐛 Issue Reporting
 Found a bug? Have a suggestion? Please [open an issue](https://github.com/yin1039832061/react-unused-icon-purge/issues)  

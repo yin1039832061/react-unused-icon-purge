@@ -6,6 +6,7 @@
   "dependencies": {
     "@babel/parser": "^7.27.1",
     "@babel/traverse": "^7.27.1",
+    "ajv": "^8.17.1",
     "colors": "^1.4.0",
     "fontmin": "1.1.0",
     "postcss": "^8.5.3",
@@ -18,7 +19,6 @@
     "node": ">=18.16.0"
   },
   "description": "Automatically detect and remove unused icons from React projects, reducing bundle size. 🔍🗑️",
-  "devDependencies": {},
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },

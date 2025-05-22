@@ -9,7 +9,9 @@ const {
     getUnicodeList,
     safelyParseJSON,
     getTemplateLiteralClassName,
-    readDir
+    readDir,
+    validateConfigSchema,
+    validateFileExists,
 } = require('./utils/index');
 
 const configFile = 'react-unused-icon-purge.config.json';
@@ -33,6 +35,15 @@ function parseUnicodeFromContent(value) {
 async function init() {
     const tempConfig = await readFile(path.resolve(projectRootPath, configFile));
     config = safelyParseJSON(tempConfig) || {};
+    try {
+        // 校验配置文件
+        validateConfigSchema(config);
+        // 校验文件是否存在
+        validateFileExists(config, projectRootPath)
+    } catch (err) {
+        console.error(colors.red(`[配置错误] ${err.message}`))
+        process.exit(1)
+    }
     const { iconfontCssPath, fontTTFPath, iconPrefix, excludeClasses } = config;
     const entry = Array.isArray(config.entry) ? config.entry : [];
     let excludeFilePath = Array.isArray(config.excludeFilePath) ? config.excludeFilePath : [];

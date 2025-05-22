@@ -3,6 +3,8 @@ const fs = require('fs');
 const fsPromises = fs.promises;
 const colors = require('colors');
 const postcss = require('postcss');
+const Ajv = require('ajv');
+const ajv = new Ajv({ allErrors: true });
 async function getConfig(root, configFile) {
     const res = await readFile(path.resolve(root, configFile));
     let obj;
@@ -199,18 +201,83 @@ async function readDir(entryPath, excludeFilePath, filePaths = []) {
             }
             const fileType = await getFileType(curPath);
             if (fileType.isDirectory) {
-                 await readDir(curPath, excludeFilePath, filePaths)
+                await readDir(curPath, excludeFilePath, filePaths)
             } else if (fileType.isFile) {
                 let reg = /^.*\.(?:jsx|tsx)$/i
                 if (reg.test(curPath)) {
                     filePaths.push(curPath);
                 }
-            } 
+            }
         }
     }
     return filePaths;
 }
 
+function validateConfigSchema(config) {
+    const schema = {
+        type: 'object',
+        required: ['entry', 'iconfontCssPath', 'fontTTFPath', 'iconPrefix'],
+        properties: {
+            entry: {
+                type: 'array',
+                items: { type: 'string' },
+                minItems: 1
+            },
+            iconfontCssPath: { type: 'string' },
+            fontTTFPath: { type: 'string' },
+            iconPrefix: { type: 'string' },
+            excludeClasses: {
+                type: 'array',
+                items: { type: 'string' },
+                default: []
+            },
+            excludeFilePath: {
+                type: 'array',
+                items: { type: 'string' },
+                default: []
+            }
+        },
+        additionalProperties: false
+    }
+    const validate = ajv.compile(schema)
+    if (!validate(config)) {
+        const errors = validate.errors.map(e =>
+            `- ${e.instancePath} ${e.message} (${JSON.stringify(e.params)})`
+        )
+        throw new Error(`Invalid config:\n${errors.join('\n')}`)
+    }
+}
+
+function validateFileExists(config, rootPath) {
+    // 校验 iconfont.css 文件
+    const cssPath = path.join(rootPath, config.iconfontCssPath)
+    if (!fs.existsSync(cssPath)) {
+        throw new Error(`iconfontCssPath 文件不存在: ${cssPath}`)
+    }
+    if (!cssPath.endsWith('.css')) {
+        throw new Error('iconfontCssPath 必须指向 .css 文件')
+    }
+
+    // 校验字体文件
+    const ttfPath = path.join(rootPath, config.fontTTFPath)
+    if (!fs.existsSync(ttfPath)) {
+        throw new Error(`字体文件不存在: ${ttfPath}`)
+    }
+    if (!['.ttf', '.otf'].some(ext => ttfPath.endsWith(ext))) {
+        throw new Error('fontTTFPath 必须指向 .ttf 或 .otf 文件')
+    }
+
+    // 校验入口路径
+    config.entry.forEach(dir => {
+        const entryPath = path.join(rootPath, dir)
+        if (!fs.existsSync(entryPath)) {
+            throw new Error(`入口路径不存在: ${entryPath}`)
+        }
+        if (!fs.statSync(entryPath).isDirectory()) {
+            throw new Error(`entry 必须为目录: ${entryPath}`)
+        }
+    })
+}
 module.exports = {
     generateMinFontPath,
     readFile,
@@ -219,5 +286,7 @@ module.exports = {
     getUnicodeList,
     safelyParseJSON,
     getTemplateLiteralClassName,
-    readDir
+    readDir,
+    validateConfigSchema,
+    validateFileExists
 };
